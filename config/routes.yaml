@@ -1,3 +1,13 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+classroom:
+    path: /classroom
+    controller: App\Controller\ClassroomController::index
+
+student:
+    path: /student
+    controller: App\Controller\StudentController::index
+
+
+club:
+    path: /club
+    controller: App\Controller\ClubController::index
+
