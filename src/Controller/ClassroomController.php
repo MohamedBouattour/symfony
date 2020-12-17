@@ -28,16 +28,30 @@ class ClassroomController extends AbstractController
     }
 
     /**
-     * @Route("/add-classroom", name="add_classroom")
+     * @Route("/add-classroom", name="add-classroom")
      */
     public function add(Request $request): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository(Classroom::class);
+        $id =  $request->query->get('id');
+        
         $classroom = new Classroom();
-        $form = $this->createForm(ClassoomType::class,$classroom);
+        $obj = $repository->findOneBy([
+            'id' => $request->query->get('id')
+        ]);
+        if($obj){
+            $classroom = $obj;    
+        }
+
+        $form = $this->createForm(ClassoomType::class,$classroom, array(
+            'method' => 'PUT', 
+        ));
         $form->handleRequest($request);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            //$entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($classroom);
             $entityManager->flush();
             return $this->redirectToRoute("classroom");
@@ -47,5 +61,38 @@ class ClassroomController extends AbstractController
             'form_title' => 'Add classroom',
             'form_classroom' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/view-classroom", name="view-classroom")
+     */
+    public function view(Request $request): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository(Classroom::class);
+        $classroom = $repository->findOneBy([
+            'id' => $request->query->get('id')
+        ]);
+        return $this->render('classroom/view.html.twig', [
+            'controller_name' => 'ClassroomController',
+            'form_title' => 'View classroom',
+            'classroom' => $classroom
+        ]);
+    }
+
+
+    /**
+     * @Route("/delete-classroom", name="delete-classroom")
+     */
+    public function delete(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository(Classroom::class);
+        $classroom = $repository->findOneBy([
+            'id' => $request->query->get('id')
+        ]);
+        $entityManager->remove($classroom);
+        $entityManager->flush();
+        return $this->redirectToRoute("classroom");
     }
 }

@@ -20,7 +20,7 @@
 
 	<div class="example-wrapper">
 		<h2>
-			Classrooms:
+			Classrooms: <a style='float:right' href="{{ path('add-classroom') }}"><i class="fas fa-plus-circle"></i></a>
 		</h2>
 
 		<table class="table">
@@ -45,6 +45,17 @@
 						</td>
 						<td>
 							{{ classroom.name }}
+						</td>
+						<td>
+							<a href="{{ path('view-classroom', {'id': classroom.id}) }}">
+								<i class="far fa-eye"></i>
+							</a>
+							<a href="{{ path('add-classroom', {'id': classroom.id}) }}">
+							<i class="fas fa-edit"></i>
+							</a>
+							<a href="{{ path('delete-classroom', {'id': classroom.id}) }}">
+							<i class="fas fa-trash"></i>
+							</a>
 						</td>
 					</tr>
 				{% endfor %}
